@@ -1,3 +1,4 @@
+import "./lib/sys";
 const _ = require('lodash');
 const ReactDOM = require("react-dom");
 const React = require("react");
