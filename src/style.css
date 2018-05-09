@@ -1,0 +1,24 @@
+body {
+    padding: 10px;
+    background: #FAFAFA;
+    min-height: 100vh;
+}
+
+h1.title {
+    margin-bottom: 16px !important;
+    font-size: 18px;
+}
+
+.notification.pre-line {
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+.fields {
+    display: flex;
+}
+
+.fields .field-checkbox {
+    flex: 1;
+    padding-bottom: 10px;
+}

@@ -8,7 +8,7 @@ class App extends Component {
   }
 
   checkbox(label, value) {
-    return <div key={value}>
+    return <div className="field-checkbox" key={value}>
       <input type="checkbox"
              id={"checkbox_" + label}
              checked={this.state[value]}
@@ -44,34 +44,53 @@ class App extends Component {
 
   render() {
     return <div>
-      <section>
-        <h1>
-          用户信息授权DEMO
-        </h1>
-        <div>
-          <h2>请求用户信息</h2>
-          {this.checkbox("用户名", "name")}
-          {this.checkbox("手机号", "mobile")}
-          {this.checkbox("邮箱", "email")}
-          <button onClick={() => this.doRequest()}>请求</button>
+      <div className="box">
+        <article className="media">
+          <div className="media-content">
+            <div className="content">
+              <h1 className="title">
+                用户信息授权DEMO
+              </h1>
+              <div>
+                <div className="fields">
+                  {this.checkbox("用户名", "name")}
+                  {this.checkbox("手机号", "mobile")}
+                  {this.checkbox("邮箱", "email")}
+                </div>
+                <button className="button is-primary" onClick={() => this.doRequest()}>请求以上用户信息
+                </button>
+                <hr/>
+                {!!this.state.userInfo ?
+                  <div
+                    className="notification pre-line">{JSON.stringify(this.state.userInfo, null, 4)}</div> :
+                  <div className="notification pre-line">(无结果)</div>}
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
 
-          <h2> 用户信息请求结果 </h2>
-          {!!this.state.userInfo ? <div>{JSON.stringify(this.state.userInfo)}</div> :
-            <div>(无结果)</div>}
-        </div>
-      </section>
-
-
-      <section>
-        <h1>
-          用户身份验证DEMO
-        </h1>
-        <button onClick={() => this.getUserIdentity()}>点击获得用户身份</button>
-        <h2> 用户身份验证结果 </h2>
-        {!!this.state.userIdentity ? <div>{JSON.stringify(this.state.userIdentity)}</div> :
-          <div>(未获得)</div>}
-      </section>
-
+      <div className="box">
+        <article className="media">
+          <div className="media-content">
+            <div className="content">
+              <h1 className="title">
+                用户身份验证DEMO
+              </h1>
+              <div>
+                <button className="button is-primary" onClick={() => this.getUserIdentity()}>点击获得用户身份
+                </button>
+                <hr/>
+                {!!this.state.userIdentity ?
+                  <div
+                    className="notification pre-line">{JSON.stringify(this.state.userIdentity, null, 4)}</div> :
+                  <div
+                    className="notification pre-line">(未获得)</div>}
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   }
 }
