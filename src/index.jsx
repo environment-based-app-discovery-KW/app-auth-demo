@@ -6,7 +6,9 @@ const $ = React.createElement;
 window.onload = function () {
   var root = document.createElement("div");
   document.body.appendChild(root);
-  ReactDOM.render($("div", null, "Hello World"), root);
+  ReactDOM.render(
+    <div>Hi!</div>,
+    root);
 };
 
 document.addEventListener("deviceready", function () {

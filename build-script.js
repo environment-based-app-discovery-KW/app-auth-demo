@@ -47,6 +47,20 @@ function buildApp() {
         filename: '[name].js',
         libraryTarget: "window",
       },
+      resolve: {
+        extensions: ['.js', '.jsx'],
+      },
+      module: {
+        rules: [
+          {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader",
+            },
+          },
+        ],
+      },
       plugins: [
         new webpack.optimize.UglifyJsPlugin({
           compress: { warnings: false },

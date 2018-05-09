@@ -18,8 +18,23 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: "window",
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
     })],
+
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
 };
