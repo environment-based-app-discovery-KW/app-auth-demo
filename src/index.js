@@ -1,4 +1,5 @@
 import "./lib/sys";
+import "./lib/bulma.min.css"
 const _ = require('lodash');
 const ReactDOM = require("react-dom");
 const React = require("react");
