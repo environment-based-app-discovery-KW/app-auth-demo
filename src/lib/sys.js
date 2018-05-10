@@ -59,7 +59,7 @@ window.sys_shim = {
   },
 };
 
-if (!window.cordova) {
+if (!window.$sysOnDevice) {
   if (!localStorage['email_shim']) {
     localStorage['email_shim'] = (Math.random() + "").substring(2, 10) + "@example.com";
   }
