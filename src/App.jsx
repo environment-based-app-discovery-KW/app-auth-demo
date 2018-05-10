@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 
 class App extends Component {
 
@@ -61,8 +62,7 @@ class App extends Component {
                 </button>
                 <hr/>
                 {!!this.state.userInfo ?
-                  <div
-                    className="notification pre-line">{JSON.stringify(this.state.userInfo, null, 4)}</div> :
+                  <SyntaxHighlighter language='json'>{JSON.stringify(this.state.userInfo, null, 4)}</SyntaxHighlighter> :
                   <div className="notification pre-line">(无结果)</div>}
               </div>
             </div>
@@ -82,8 +82,7 @@ class App extends Component {
                 </button>
                 <hr/>
                 {!!this.state.userIdentity ?
-                  <div
-                    className="notification pre-line">{JSON.stringify(this.state.userIdentity, null, 4)}</div> :
+                  <SyntaxHighlighter language='json'>{JSON.stringify(this.state.userIdentity, null, 4)}</SyntaxHighlighter> :
                   <div
                     className="notification pre-line">(未获得)</div>}
               </div>
