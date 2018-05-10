@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
+const syntaxHighlighterStyle = {
+  backgroundColor: "#f5f5f5",
+  borderRadius: 4,
+  width: "calc(100vw - 60px)",
+  overflow: "scroll",
+};
+
 class App extends Component {
 
   constructor(props) {
@@ -62,7 +69,8 @@ class App extends Component {
                 </button>
                 <hr/>
                 {!!this.state.userInfo ?
-                  <SyntaxHighlighter language='json'>{JSON.stringify(this.state.userInfo, null, 4)}</SyntaxHighlighter> :
+                  <SyntaxHighlighter wrapLines={true} customStyle={syntaxHighlighterStyle}
+                                     language='json'>{JSON.stringify(this.state.userInfo, null, 4)}</SyntaxHighlighter> :
                   <div className="notification pre-line">(无结果)</div>}
               </div>
             </div>
@@ -82,7 +90,8 @@ class App extends Component {
                 </button>
                 <hr/>
                 {!!this.state.userIdentity ?
-                  <SyntaxHighlighter language='json'>{JSON.stringify(this.state.userIdentity, null, 4)}</SyntaxHighlighter> :
+                  <SyntaxHighlighter wrapLines={true} customStyle={syntaxHighlighterStyle}
+                                     language='json'>{JSON.stringify(this.state.userIdentity, null, 4)}</SyntaxHighlighter> :
                   <div
                     className="notification pre-line">(未获得)</div>}
               </div>
