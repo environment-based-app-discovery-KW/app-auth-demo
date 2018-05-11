@@ -113,7 +113,7 @@ window.sys_shim = {
         });
         successCallback({
           publicKey: localStorage['public_key_shim'],
-          signature: window.$rsa.sign(toSign, 'sha1'),
+          signature: hex2b64(window.$rsa.sign(toSign, 'sha1')),
           signedContent: toSign,
         })
       } else {
