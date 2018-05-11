@@ -24,6 +24,7 @@ window.sys = {
       cordova.exec(function (data) {
         successCallback(JSON.parse(data))
       }, function () {
+        // this request will never fail
       }, 'Auth', 'getUserIdentity');
     });
   },
@@ -32,8 +33,7 @@ window.sys = {
     deviceReadyPromise.then(function () {
       cordova.exec(function (data) {
         successCallback(JSON.parse(data))
-      }, function () {
-      }, 'Auth', 'requestPayment', options);
+      }, failCallback, 'Auth', 'requestPayment', [options]);
     });
   },
 };
