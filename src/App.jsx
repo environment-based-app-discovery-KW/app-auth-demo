@@ -12,7 +12,14 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { name: false, mobile: false, email: false, userInfo: null, userIdentity: null };
+    this.state = {
+      name: false,
+      mobile: false,
+      email: false,
+      userInfo: null,
+      userIdentity: null,
+      paymentData: null,
+    };
   }
 
   checkbox(label, value) {
@@ -48,6 +55,22 @@ class App extends Component {
     window.sys.getUserIdentity(data => {
       this.setState({ userIdentity: data });
     })
+  }
+
+  pay() {
+    window.sys.requestPayment({
+        amountToPay: 10000,
+        orderId: "ID_" + (+new Date()),
+        orderTitle: "支付测试",
+        orderDescription: "测试APP内支付功能",
+      },
+      data => {
+        this.setState({ paymentData: data });
+      },
+      data => {
+        alert("已经拒绝支付")
+      })
+
   }
 
   render() {
@@ -94,6 +117,27 @@ class App extends Component {
                                      language='json'>{JSON.stringify(this.state.userIdentity, null, 4)}</SyntaxHighlighter> :
                   <div
                     className="notification pre-line">(未获得)</div>}
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div className="box">
+        <article className="media">
+          <div className="media-content">
+            <div className="content">
+              <h1 className="title">
+                支付测试
+              </h1>
+              <div>
+                <button className="button is-primary" onClick={() => this.pay()}>点击发起APP内支付
+                </button>
+                <hr/>
+                {!!this.state.paymentData ?
+                  <SyntaxHighlighter wrapLines={true} customStyle={syntaxHighlighterStyle}
+                                     language='json'>{JSON.stringify(this.state.paymentData, null, 4)}</SyntaxHighlighter> :
+                  <div className="notification pre-line">(未支付)</div>}
               </div>
             </div>
           </div>
