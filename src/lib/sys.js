@@ -27,6 +27,15 @@ window.sys = {
       }, 'Auth', 'getUserIdentity');
     });
   },
+  requestPayment: function (options, successCallback, failCallback) {
+    // options = {amountToPay, orderId, orderTitle, orderDescription}
+    deviceReadyPromise.then(function () {
+      cordova.exec(function (data) {
+        successCallback(JSON.parse(data))
+      }, function () {
+      }, 'Auth', 'requestPayment', options);
+    });
+  },
 };
 
 // shim when developing on a PC
@@ -57,6 +66,27 @@ window.sys_shim = {
       signature: 'iFR1Izu6eWFXpgayB86DbliKyjL6QgI2UhZqbQi0yCq4nfNBTvvKuSJ81ixtzho420N8B4NabeU0\\nDHZ+g45uDi2yA1O46bM983/r0hchBzd3lUQFV6d3z3m58uDB7hnoi/kxAWG5tsMaGp8W/TOD44HW\\n+UkbCcSpiLkjHSNcols0IK5SBfLw9bMYYEHvTBvn6h3Obkjianss7jThGmEzjxiXnauUlMYevYbW\\n51KKoJ26HAploVWLxT/+Z7PG5oDeYGr57w/hgrToYFm6Nq9KFvpU64SoX6khSLaX523CqDipayxu\\nTnUDBdzHrUcsBtN72Rl1kR91QBAaEnRZvlauuw==',
       signedContent: 'APP:DUMMY_APP:1520000000000',
     })
+  },
+  requestPayment: function (options, successCallback, failCallback) {
+    var amountToPay = options.amountToPay, orderId = options.orderId,
+      orderTitle = options.orderTitle, orderDescription = options.orderDescription;
+    if (confirm("支付请求： " + orderTitle + "\n" + (amountToPay / 100).toFixed(2) + "元\n" + orderDescription)) {
+      var toSign = JSON.stringify({
+        app_name: "DUMMY_APP",
+        order_id: orderId,
+        order_title: orderTitle,
+        order_description: orderDescription,
+        timestamp: 1520000000000,
+        amount_to_pay: amountToPay,
+      });
+      successCallback({
+        publicKey: localStorage['public_key_shim'],
+        signature: 'signature is not supported in an emulated environment',
+        signedContent: toSign,
+      })
+    } else {
+      failCallback();
+    }
   },
 };
 
