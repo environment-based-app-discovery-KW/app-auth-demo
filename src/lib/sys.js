@@ -38,6 +38,27 @@ window.sys = {
   },
 };
 
+/*
+ * below are PC shim related code
+ */
+
+var pcShimReady = new Promise(resolve => {
+  if (!window.$sysOnDevice) {
+    loadScript("http://7xn0vy.dl1.z0.glb.clouddn.com/jsrsasign-all-min.js").then(resolve);
+  }
+});
+
+function loadScript(src) {
+  return new Promise(function (resolve, reject) {
+    var s;
+    s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
 // shim when developing on a PC
 window.sys_shim = {
   toast: function (text) {
@@ -61,32 +82,36 @@ window.sys_shim = {
     }
   },
   getUserIdentity: function (successCallback) {
-    successCallback({
-      publicKey: localStorage['public_key_shim'],
-      signature: 'iFR1Izu6eWFXpgayB86DbliKyjL6QgI2UhZqbQi0yCq4nfNBTvvKuSJ81ixtzho420N8B4NabeU0\\nDHZ+g45uDi2yA1O46bM983/r0hchBzd3lUQFV6d3z3m58uDB7hnoi/kxAWG5tsMaGp8W/TOD44HW\\n+UkbCcSpiLkjHSNcols0IK5SBfLw9bMYYEHvTBvn6h3Obkjianss7jThGmEzjxiXnauUlMYevYbW\\n51KKoJ26HAploVWLxT/+Z7PG5oDeYGr57w/hgrToYFm6Nq9KFvpU64SoX6khSLaX523CqDipayxu\\nTnUDBdzHrUcsBtN72Rl1kR91QBAaEnRZvlauuw==',
-      signedContent: 'APP:DUMMY_APP:1520000000000',
-    })
-  },
-  requestPayment: function (options, successCallback, failCallback) {
-    var amountToPay = options.amountToPay, orderId = options.orderId,
-      orderTitle = options.orderTitle, orderDescription = options.orderDescription;
-    if (confirm("支付请求： " + orderTitle + "\n" + (amountToPay / 100).toFixed(2) + "元\n" + orderDescription)) {
-      var toSign = JSON.stringify({
-        app_name: "DUMMY_APP",
-        order_id: orderId,
-        order_title: orderTitle,
-        order_description: orderDescription,
-        timestamp: 1520000000000,
-        amount_to_pay: amountToPay,
-      });
+    pcShimReady.then(function () {
       successCallback({
         publicKey: localStorage['public_key_shim'],
-        signature: 'signature is not supported in an emulated environment',
-        signedContent: toSign,
+        signature: 'iFR1Izu6eWFXpgayB86DbliKyjL6QgI2UhZqbQi0yCq4nfNBTvvKuSJ81ixtzho420N8B4NabeU0\nDHZ+g45uDi2yA1O46bM983/r0hchBzd3lUQFV6d3z3m58uDB7hnoi/kxAWG5tsMaGp8W/TOD44HW\n+UkbCcSpiLkjHSNcols0IK5SBfLw9bMYYEHvTBvn6h3Obkjianss7jThGmEzjxiXnauUlMYevYbW\n51KKoJ26HAploVWLxT/+Z7PG5oDeYGr57w/hgrToYFm6Nq9KFvpU64SoX6khSLaX523CqDipayxu\nTnUDBdzHrUcsBtN72Rl1kR91QBAaEnRZvlauuw==',
+        signedContent: 'APP:DUMMY_APP:1520000000000',
       })
-    } else {
-      failCallback();
-    }
+    });
+  },
+  requestPayment: function (options, successCallback, failCallback) {
+    pcShimReady.then(function () {
+      var amountToPay = options.amountToPay, orderId = options.orderId,
+        orderTitle = options.orderTitle, orderDescription = options.orderDescription;
+      if (confirm("支付请求： " + orderTitle + "\n" + (amountToPay / 100).toFixed(2) + "元\n" + orderDescription)) {
+        var toSign = JSON.stringify({
+          app_name: "DUMMY_APP",
+          order_id: orderId,
+          order_title: orderTitle,
+          order_description: orderDescription,
+          timestamp: 1520000000000,
+          amount_to_pay: amountToPay,
+        });
+        successCallback({
+          publicKey: localStorage['public_key_shim'],
+          signature: 'signature is not supported in an emulated environment',
+          signedContent: toSign,
+        })
+      } else {
+        failCallback();
+      }
+    });
   },
 };
 
@@ -102,7 +127,7 @@ if (!window.$sysOnDevice) {
   }
 
   if (!localStorage['public_key_shim']) {
-    localStorage['public_key_shim'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnNqy/RO+wg6pph7O7OfNYGksVyQWEAdB\\nSYzdGX8tA6NZhd6zmAxiBpZnAiqqpGY8HIVaL4CiQyjZKiAEuMwGUXajGIPeAIeaI5pBCEIDgOE5\\nzZZP4LGXEcMu5U3AYgdajLL33rv0J5iMZp7LJrtaJn6+w2AqKA5f8Zx8UmvhPdzG2hdw0GO461dX\\n8bLOtOT8D6gaieb1xkY0h+zdnj4O9e91id/PIvihRAKpFngKc2y5mO0XpWzVp8+961WcqNxLkO+u\\nGHI1IA6dRqBwbQ7Ymd3F90CKTxunwHFnQ/eUkeaQDF62uNibVhaj+elrwcy+XRRWE0a7tjy6HF+v\\n+Np0zQIDAQAB";
+    localStorage['public_key_shim'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnNqy/RO+wg6pph7O7OfNYGksVyQWEAdB\nSYzdGX8tA6NZhd6zmAxiBpZnAiqqpGY8HIVaL4CiQyjZKiAEuMwGUXajGIPeAIeaI5pBCEIDgOE5\nzZZP4LGXEcMu5U3AYgdajLL33rv0J5iMZp7LJrtaJn6+w2AqKA5f8Zx8UmvhPdzG2hdw0GO461dX\n8bLOtOT8D6gaieb1xkY0h+zdnj4O9e91id/PIvihRAKpFngKc2y5mO0XpWzVp8+961WcqNxLkO+u\nGHI1IA6dRqBwbQ7Ymd3F90CKTxunwHFnQ/eUkeaQDF62uNibVhaj+elrwcy+XRRWE0a7tjy6HF+v\n+Np0zQIDAQAB";
   }
 
   if (!localStorage['private_key_shim']) {
