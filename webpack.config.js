@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require('path');
 const BUILD_DIR = path.join(__dirname, '/dist');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const PATHS = {
   src: path.join(__dirname, '/src'),
@@ -24,7 +25,8 @@ module.exports = {
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
-    })],
+    }),
+    new BundleAnalyzerPlugin()],
 
   module: {
     rules: [
