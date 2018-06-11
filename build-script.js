@@ -10,7 +10,9 @@ const packageJson = require('./package.json');
 const SRC_DIR = path.join(__dirname, '/src');
 const fileName = packageJson.name + '-' + packageJson.version + '-build';
 const BUILD_DIR = path.join(__dirname, '/' + fileName);
+const chalk = require('chalk');
 
+console.log(chalk.bold.white.bgCyan("初始化Build目录 "));
 // 创建空的build目录
 if (fs.existsSync(BUILD_DIR)) {
   rimraf.sync(BUILD_DIR);
@@ -18,6 +20,7 @@ if (fs.existsSync(BUILD_DIR)) {
 fs.mkdirSync(BUILD_DIR);
 
 // 运行npm shrinkwrap以获得所有依赖的版本
+console.log(chalk.bold.white.bgCyan("建立npm shrinkwrap "));
 execSync("npm shrinkwrap", { stdio: [0, 1, 2] });
 
 // 读取shrinkwrap信息
@@ -29,6 +32,7 @@ function buildApp() {
     const entry = {};
     entry.app = SRC_DIR;
     const externals = {};
+    console.log(chalk.bold.green("总共" + Object.keys(packageJson.dependencies).length + "个依赖项 "));
 
     Object.keys(shrinkWrapJson.dependencies).forEach(_ => {
       let ver = shrinkWrapJson.dependencies[_].version;
@@ -77,6 +81,8 @@ function buildApp() {
       if (err || stats.hasErrors()) {
         reject(err || stats.hasErrors());
       }
+      console.log(chalk.bold.yellow(stats.toString()));
+      console.log(chalk.bold.green("业务代码构建完毕 "));
       resolve();
     });
   });
@@ -124,10 +130,17 @@ function buildDeps() {
 
     fs.writeFileSync(path.join(BUILD_DIR, "meta.json"), JSON.stringify(meta, null, 4), { encoding: "UTF8" });
 
+    console.log(chalk.bold.white.bgCyan("构建依赖项：" + Object.keys(packageJson.dependencies).join(",")));
     webpack(depsBuildConf, (err, stats) => {
+      console.log(chalk.bold.yellow(stats.toString()));
+      console.log(chalk.bold.green("依赖项构建完毕 "));
       if (err || stats.hasErrors()) {
         reject(err || stats.hasErrors());
       }
+
+      console.log(chalk.bold.white.bgCyan("生成APP元数据："));
+      console.log(chalk.bold.yellow(JSON.stringify(meta, null, 4)));
+
       resolve();
     });
   });
@@ -142,7 +155,7 @@ buildApp().then(() => {
       cwd: BUILD_DIR
     }, fs.readdirSync(BUILD_DIR)).then(() => {
       rimraf(BUILD_DIR, () => {
-        console.log("Build complete");
+        console.log(chalk.bold.white.bgCyan("构建完毕"));
       });
     });
   });
